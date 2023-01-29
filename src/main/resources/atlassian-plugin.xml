@@ -15,8 +15,6 @@
     <!-- add our web resources -->
     <web-resource key="unofficial-d2lang-confluence-plugin-resources" name="unofficial-d2lang-confluence-plugin Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
-        <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
         
         <resource type="download" name="unofficial-d2lang-confluence-plugin.css" location="/css/unofficial-d2lang-confluence-plugin.css"/>
         <resource type="download" name="unofficial-d2lang-confluence-plugin.js" location="/js/unofficial-d2lang-confluence-plugin.js"/>
@@ -32,7 +30,5 @@
             <parameter name="themeId" type="int"/>
             <parameter name="customArgs" type="string"/>
         </parameters>
-        <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
-        <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
     </xhtml-macro>
 </atlassian-plugin>
