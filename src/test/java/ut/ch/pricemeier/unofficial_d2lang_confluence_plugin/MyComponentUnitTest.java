@@ -1,8 +1,8 @@
-package ut.ch.pricemeier;
+package ut.ch.pricemeier.unofficial_d2lang_confluence_plugin;
 
 import org.junit.Test;
-import ch.pricemeier.api.MyPluginComponent;
-import ch.pricemeier.impl.MyPluginComponentImpl;
+import ch.pricemeier.unofficial_d2lang_confluence_plugin.api.MyPluginComponent;
+import ch.pricemeier.unofficial_d2lang_confluence_plugin.impl.MyPluginComponentImpl;
 
 import static org.junit.Assert.assertEquals;
 

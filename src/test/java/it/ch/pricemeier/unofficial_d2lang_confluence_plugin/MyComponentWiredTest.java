@@ -1,9 +1,9 @@
-package it.ch.pricemeier;
+package it.ch.pricemeier.unofficial_d2lang_confluence_plugin;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.atlassian.plugins.osgi.test.AtlassianPluginsTestRunner;
-import ch.pricemeier.api.MyPluginComponent;
+import ch.pricemeier.unofficial_d2lang_confluence_plugin.api.MyPluginComponent;
 import com.atlassian.sal.api.ApplicationProperties;
 
 import static org.junit.Assert.assertEquals;
