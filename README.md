@@ -2,6 +2,29 @@
 
 This plugin adds a new `d2` macro to your confluence installation that allows you to embed d2 diagrams in your confluence pages.
 
+## Usage
+
+1. Create a new page
+2. Add a new macro by typing `{d2` + ENTER
+3. Enter your d2lang specification for a diagram
+4. Publish the page
+5. Upon publishing, the diagram (an svg) will be generated and displayed on the page
+
+## Example
+
+D2 input:
+
+```
+direction: right
+
+Web Application -> Backend.Service A -> Oracle DB
+Web Application -> Backend.Service B -> SQLite
+```
+
+SVG output:
+
+![Example diagram](./example.svg)
+
 ## Installation
 
 1. Build the jar `atlas-mvn package`

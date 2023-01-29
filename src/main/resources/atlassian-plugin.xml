@@ -5,6 +5,7 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
         <param name="plugin-icon">images/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="configure.url">/admin/plugins/gmaps/configurePlugin.action</param>
         <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
         <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
     </plugin-info>
