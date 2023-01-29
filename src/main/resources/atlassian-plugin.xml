@@ -5,6 +5,8 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
         <param name="plugin-icon">images/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
+        <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
+        <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
     </plugin-info>
 
     <!-- add our i18n resource -->
@@ -13,6 +15,8 @@
     <!-- add our web resources -->
     <web-resource key="unofficial-d2lang-confluence-plugin-resources" name="unofficial-d2lang-confluence-plugin Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
+        <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
         
         <resource type="download" name="unofficial-d2lang-confluence-plugin.css" location="/css/unofficial-d2lang-confluence-plugin.css"/>
         <resource type="download" name="unofficial-d2lang-confluence-plugin.js" location="/js/unofficial-d2lang-confluence-plugin.js"/>
@@ -20,5 +24,15 @@
 
         <context>unofficial-d2lang-confluence-plugin</context>
     </web-resource>
-    
+
+    <xhtml-macro name="d2" class="ch.pricemeier.unofficial_d2lang_confluence_plugin.macros.D2LangMacro" key='d2-macro'>
+        <description key="d2.macro.desc"/>
+        <category name="visuals"/>
+        <parameters>
+            <parameter name="themeId" type="int"/>
+            <parameter name="customArgs" type="string"/>
+        </parameters>
+        <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
+        <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
+    </xhtml-macro>
 </atlassian-plugin>
