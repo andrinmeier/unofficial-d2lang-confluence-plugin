@@ -4,17 +4,28 @@ import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.pages.Attachment;
 import com.atlassian.confluence.pages.AttachmentManager;
+import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ConfluenceImport;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+@Named
 public class D2LangMacro implements Macro {
 
     private final Logger logger = Logger.getLogger(D2LangMacro.class.getName());
@@ -24,6 +35,14 @@ public class D2LangMacro implements Macro {
     @ComponentImport
     private final SpaceManager spaceManager;
 
+    @ConfluenceImport
+    private SettingsManager settingsManager;
+
+    @Inject
+    public void setSpaceManager(SettingsManager settingsManager){
+        this.settingsManager = settingsManager;
+    }
+
     public D2LangMacro(final AttachmentManager attachmentManager, final SpaceManager spaceManager) {
         this.attachmentManager = attachmentManager;
         this.spaceManager = spaceManager;
@@ -32,14 +51,32 @@ public class D2LangMacro implements Macro {
 
     public String execute(Map<String, String> map, String bodyContent, ConversionContext conversionContext) {
         try {
+            final String tmpdir = System.getProperty("java.io.tmpdir");
+            final Path binaryPath = Paths.get(tmpdir, "d2");
+            if (!Files.exists(binaryPath)) {
+                InputStream inputStream = getClass().getResourceAsStream("/d2");
+                Files.copy(inputStream, binaryPath, StandardCopyOption.REPLACE_EXISTING);
+                Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxr-xr-x");
+                Files.setPosixFilePermissions(binaryPath, permissions);
+            }
             final String filename = UUID.randomUUID().toString();
             File inputD2File = File.createTempFile(filename, ".d2");
             try (FileWriter writer = new FileWriter(inputD2File)) {
                 writer.write(bodyContent);
             }
             File outputSvgFile = File.createTempFile(filename, ".svg");
-            final Integer themeId = map.get("themeId") != null ? Integer.parseInt(map.get("themeId")) : null;
-            generateD2Diagram(inputD2File.toPath(), outputSvgFile.toPath(), themeId, map.get("customArgs"));
+
+            Integer themeId = null;
+            if (map.get("themeId") != null) {
+                final String themeIdUnparsed = map.get("themeId");
+                try {
+                    themeId = Integer.parseInt(themeIdUnparsed);
+                } catch (NumberFormatException e) {
+                    return String.format("The theme id %s is invalid. Please consult https://d2lang.com/tour/themes for a list of valid theme ids.", themeIdUnparsed);
+                }
+            }
+
+            generateD2Diagram(binaryPath, inputD2File.toPath(), outputSvgFile.toPath(), themeId, map.get("customArgs"));
             logger.info("Created file: " + inputD2File.getAbsolutePath());
             Attachment attachment = new Attachment();
             attachment.setFileName(filename + ".svg");
@@ -51,7 +88,8 @@ public class D2LangMacro implements Macro {
             try (final InputStream stream = new FileInputStream(outputSvgFile)) {
                 attachmentManager.saveAttachment(attachment, null, stream);
             }
-            return "<img src='/confluence" + attachment.getDownloadPath() + "'/>";
+            final String fullDownloadSvgPath = String.format("%s%s", settingsManager.getGlobalSettings().getBaseUrl(), attachment.getDownloadPath());
+            return String.format("<img src='%s'/>", fullDownloadSvgPath);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "An error occurred while running the macro", e);
             return "Didn't work!";
@@ -63,9 +101,9 @@ public class D2LangMacro implements Macro {
 
     public OutputType getOutputType() { return OutputType.BLOCK; }
 
-    private void generateD2Diagram(final Path inputFile, final Path outputFile, final Integer themeId, final String customArgs) {
+    private void generateD2Diagram(final Path binaryPath, final Path inputFile, final Path outputFile, final Integer themeId, final String customArgs) {
         try {
-            String d2langCLI = constructD2LangCLICommand(inputFile, outputFile, themeId, customArgs);
+            String d2langCLI = constructD2LangCLICommand(binaryPath, inputFile, outputFile, themeId, customArgs);
             executeD2LangCommand(d2langCLI);
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "An error occurred while running the macro", e);
@@ -91,8 +129,8 @@ public class D2LangMacro implements Macro {
         logger.info("Process exit code: " + exitCode);
     }
 
-    private String constructD2LangCLICommand(Path d2InputPath, Path svgOutputPath, final Integer themeId, final String customArgs) {
-        String d2langCLI = String.format("d2 %s %s", d2InputPath, svgOutputPath);
+    private String constructD2LangCLICommand(final Path binaryPath, Path d2InputPath, Path svgOutputPath, final Integer themeId, final String customArgs) {
+        String d2langCLI = String.format("%s %s %s", binaryPath, d2InputPath, svgOutputPath);
         if (themeId != null) {
             logger.info("Using themeId: " + themeId);
             d2langCLI += String.format(" -t %d", themeId);
