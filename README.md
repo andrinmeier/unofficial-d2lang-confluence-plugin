@@ -57,3 +57,4 @@ Confluence has a quick reload feature so can be left running. It'll automaticall
 Full documentation is always available at:
 
 https://developer.atlassian.com/display/DOCS/Introduction+to+the+Atlassian+Plugin+SDK
+
