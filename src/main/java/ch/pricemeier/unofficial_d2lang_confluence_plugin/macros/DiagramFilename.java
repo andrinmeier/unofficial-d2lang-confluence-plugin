@@ -31,10 +31,6 @@ public final class DiagramFilename {
     }
 
     public static DiagramFilename createWithoutExtension(final String parameterAsString, final String textAsString) {
-        try {
-            return new DiagramFilename(URLEncoder.encode(ContentHash.sha256(parameterAsString + "-" + textAsString), StandardCharsets.UTF_8.toString()));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return new DiagramFilename(ContentHash.sha256(parameterAsString + "-" + textAsString));
     }
 }

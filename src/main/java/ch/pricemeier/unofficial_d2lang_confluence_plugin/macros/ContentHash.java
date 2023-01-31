@@ -23,6 +23,6 @@ public class ContentHash {
             throw new RuntimeException(e);
         }
         byte[] hash = messageDigest.digest(unhashed.getBytes(StandardCharsets.UTF_8));
-        return Base64.getEncoder().encodeToString(hash);
+        return Base64.getUrlEncoder().encodeToString(hash);
     }
 }
