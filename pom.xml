@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.pricemeier</groupId>
     <artifactId>unofficial-d2lang-confluence-plugin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <organization>
         <name>Andrin Meier</name>
