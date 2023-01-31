@@ -1,5 +1,8 @@
 package ch.pricemeier.unofficial_d2lang_confluence_plugin.macros;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -10,6 +13,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 public final class DiagramBinary {
+    private static final Logger logger = LoggerFactory.getLogger(DiagramBinary.class);
 
     private DiagramBinary() {
     }
@@ -23,7 +27,7 @@ public final class DiagramBinary {
                 Files.setPosixFilePermissions(outputPath, permissions);
             }
         } catch (IOException e) {
-            //logger.error("An error occurred while extracting d2 binary", e);
+            logger.error("An error occurred while extracting d2 binary", e);
             throw new RuntimeException(e);
         }
     }

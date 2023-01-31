@@ -7,6 +7,8 @@ import com.atlassian.confluence.pages.AttachmentManager;
 import com.atlassian.confluence.setup.settings.SettingsManager;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.io.*;
@@ -17,6 +19,8 @@ import java.util.Map;
 
 @Named
 public class D2LangMacro implements Macro {
+
+    private static final Logger logger = LoggerFactory.getLogger(D2LangMacro.class);
 
     @ComponentImport
     private AttachmentManager attachmentManager;
@@ -58,7 +62,7 @@ public class D2LangMacro implements Macro {
                 return String.format("<img src='%s'/>", fullDownloadSvgPath);
             }
         } catch (Exception e) {
-            //logger.error("An error occurred while running the macro", e);
+            logger.error("An error occurred while running the macro", e);
             return "Didn't work!";
         }
     }
