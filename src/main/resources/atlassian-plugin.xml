@@ -8,6 +8,7 @@
         <param name="configure.url">/admin/plugins/gmaps/configurePlugin.action</param>
         <component-import key="attachmentManager" interface="com.atlassian.confluence.pages.AttachmentManager" />
         <component-import key="spaceManager" interface="com.atlassian.confluence.spaces.SpaceManager" />
+        <component-import key="settingsManager" interface="com.atlassian.confluence.setup.settings.SettingsManager" />
     </plugin-info>
 
     <!-- add our i18n resource -->
@@ -28,8 +29,27 @@
         <description key="d2.macro.desc"/>
         <category name="visuals"/>
         <parameters>
-            <parameter name="themeId" type="int"/>
-            <parameter name="customArgs" type="string"/>
+            <parameter name="layoutEngine" type="enum" default="dagre">
+                <value name="dagre"/>
+                <value name="elk"/>
+            </parameter>
+            <parameter name="theme" type="enum" default="default">
+                <value name="default"/>
+                <value name="neutral grey"/>
+                <value name="flagship terrastruct"/>
+                <value name="cool classics"/>
+                <value name="mixed berry blue"/>
+                <value name="grape soda"/>
+                <value name="aubergine"/>
+                <value name="colorblind clear"/>
+                <value name="vanilla nitro cola"/>
+                <value name="orange creamsicle"/>
+                <value name="shirley temple"/>
+                <value name="earth tones"/>
+                <value name="everglade green"/>
+                <value name="buttered toast"/>
+            </parameter>
+            <parameter name="sketchMode" type="boolean" default="false"/>
         </parameters>
     </xhtml-macro>
 </atlassian-plugin>
